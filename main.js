@@ -49,21 +49,23 @@ mounted() {
   },
   template: `
   <div>
-    <div>
+    <div v-if="addMode === false">
       <button @click="addMode = true">New Friend</button>
     </div>
-    <div v-if="addMode === true">
-        Name: <input name="name" v-on:keyup.13="addFriend(this)">
+    <div v-else>
+      Name: <input name="name">
+      <button @click="addFriend(this.name)">Save</button>  
     </div>
+
     <li v-for="friend, i in friends">
       <div v-if="editMode === friend.id">
         <input v-on:keyup.13="updateFriend(friend)" v-model="friend.name" />
-        <button @click="updateFriend(friend)">save</button>  
+        <button @click="updateFriend(friend)">Save</button>  
       </div>
       <div v-else>
-        <button @click="editMode = friend.id">edit</button> 
+        <button @click="editMode = friend.id">Edit</button> 
         {{friend.name}}
-        <button @click="deleteFriend(friend.id, i)">x</button> 
+        <button @click="deleteFriend(friend.id, i)">X</button> 
       </div>
     </li>
   </div>
