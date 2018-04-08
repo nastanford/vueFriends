@@ -4,7 +4,8 @@ const app = new Vue({
   data: {
     editMode: null,
     addMode: false,
-    friends: []
+    friends: [],
+    newFriend: []
   },
   methods: {
     deleteFriend(id, i) {
@@ -15,17 +16,18 @@ const app = new Vue({
         this.friends.splice(i,1);
       })      
     },
-    addFriend(friend) {
+    addFriend() {
       fetch("http://rest.learncode.academy/api/nstanford/friends/", {
-        body: JSON.stringify(friend),
+        body: JSON.stringify({name: this.newFriend.name,age: this.newFriend.age}),
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
       })        
       .then(() => {
-        this.addMode = false;
-      }) 
+          this.addMode = false;
+          this.friends.push({name: this.newFriend.name,age: this.newFriend.age});   
+        }) 
       },
     updateFriend(friend) {
     fetch("http://rest.learncode.academy/api/nstanford/friends/" + friend.id, {
@@ -53,10 +55,13 @@ mounted() {
       <button @click="addMode = true">New Friend</button>
     </div>
     <div v-else>
-      Name: <input name="name">
-      <button @click="addFriend(this.name)">Save</button>  
+      Name: <input name="name" v-model="newFriend.name">
+      Age: <input name="age" v-model="newFriend.age">
+    <button @click="addFriend(this.name)">Save</button>  
     </div>
-
+    <div>
+    {{this.newFriend.name}} {{this.newFriend.age}}
+    </div>
     <li v-for="friend, i in friends">
       <div v-if="editMode === friend.id">
         <input v-on:keyup.13="updateFriend(friend)" v-model="friend.name" />
